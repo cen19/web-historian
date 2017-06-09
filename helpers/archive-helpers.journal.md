@@ -4,7 +4,7 @@ Outputs: proper response to the clients
 side effects: data can be modified based on request
 
 ### Step 2: Justification
-<!-- record your justification here -->
+I need to serve data accordingly
 
 ### Step 3: Explanation
 <!-- record your explanation here -->

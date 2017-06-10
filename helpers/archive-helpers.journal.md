@@ -17,11 +17,6 @@ If the request requires us to modify data, we will do the changes requested and 
 
 ### Step 5: Approximation
 User submits a url
-Server checks the url against a site.txt file in the archives folder
-If the url string is present
-  The server will go into the archives/sites folder and find the file corresponding to the HTML file
-    That same file will then be stringified by the server
-      The server will send that string back to the client
 
 ### Step 6: Verification
 Verified mentally.

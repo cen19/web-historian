@@ -3,10 +3,8 @@ var archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
 var httphelpers = require('./http-helpers.js');
 var fs = require('fs');
-var url = require('url');
-
-
-
+// var urlMod = require('url');
+const { URL } = require('url');
 
 
 
@@ -20,14 +18,14 @@ var url = require('url');
 exports.handleRequest = function (req, res) {
   //gather useful information about req
     //useful info in this case will be the request url, method, header
-  var url = req.url;
+  // var url = req.url;
   var method = req.method;
   var header = req.header;
 
-     
+   
   //to get method request which we're receiving, we need to write a res
   // res.writeHead(status code, string-message, headers)
-  if (method === 'GET' && url === '/') {
+  if (method === 'GET' && req.url === '/') {
     console.log('***');
     var indexPath = archive.paths.siteAssets + '/index.html';
     
@@ -48,7 +46,7 @@ exports.handleRequest = function (req, res) {
     // console.log('url: ' + url);
     
     // have correct url path in hard-drive
-    var urlPathFile = archive.paths.archivedSites + url;
+    var urlPathFile = archive.paths.archivedSites + req.url;
     var statusCode;
     // console.log(urlPathFile);
     
@@ -65,31 +63,58 @@ exports.handleRequest = function (req, res) {
   }
 
   if (method === 'POST') {
-    console.log('POST METHOD HAPPENING');
-    console.log(req);
+    var statusCode;
+    console.log('POST METHOD HAPPENING'); 
+    var sitesTxtPath = archive.paths.list;
+
+
+    var data = '';
+    req.on('data', function(chunk) {
+      console.log(chunk);
+      data += chunk;
+
+    });
+    req.on('end', function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+        fs.writeFile(sitesTxtPath, data.slice(4) + '\n', 'utf8', function(err, data) {
+        // if there is an error, log it
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('here');
+            statusCode = 302;
+            // if there is no error, write the head for 302
+            res.writeHead(statusCode, httphelpers.headers);
+            res.end();
+          }
+        });
+            
+      }
+    });
+    console.log('data outside', data);
     // should append submitted sites to SITES.TXT
     
-    var statusCode;
 
     // gain access to the sites.txt file
-    var sitesTxtPath = archive.paths.list;
     // console.log(sitesTxtPath);
     
 
     // add the url to the sites.txt file
-    fs.writeFile(sitesTxtPath, url, 'utf8', function(err) {
-      // if there is an error, log it
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('here');
-        statusCode = 302;
-        // if there is no error, write the head for 302
-        res.writeHead(statusCode, httphelpers.headers);
-        res.end();
-
-      }
-    });
+    // fs.writeFile(sitesTxtPath, 'something', 'utf8', function(err, data) {
+    //   // if there is an error, log it
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log('here');
+    //     statusCode = 302;
+    //     // if there is no error, write the head for 302
+    //     res.writeHead(statusCode, httphelpers.headers);
+    //     res.end();
+    //   }
+    // });
   }
 
 

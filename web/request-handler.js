@@ -3,8 +3,7 @@ var archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
 var httphelpers = require('./http-helpers.js');
 var fs = require('fs');
-// var urlMod = require('url');
-const { URL } = require('url');
+
 
 
 
@@ -43,7 +42,6 @@ exports.handleRequest = function (req, res) {
   } else if (method === 'GET') {
     console.log('*****');
     // check url address to see if it matches against something in the archivedSites
-    // console.log('url: ' + url);
     
     // have correct url path in hard-drive
     var urlPathFile = archive.paths.archivedSites + req.url;
@@ -92,9 +90,3 @@ exports.handleRequest = function (req, res) {
 
   // res.end(archive.paths.list);
 };
-
-
-// fs.readFile('/etc/passwd', (err, data) => {
-//   if (err) throw err;
-//   console.log(data);
-// });

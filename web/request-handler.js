@@ -67,64 +67,28 @@ exports.handleRequest = function (req, res) {
     console.log('POST METHOD HAPPENING'); 
     var sitesTxtPath = archive.paths.list;
 
-
     var data = '';
     req.on('data', function(chunk) {
-      console.log(chunk);
       data += chunk;
-
     });
     req.on('end', function(err) {
       if (err) {
         console.log(err);
       } else {
-        console.log(data);
-        fs.writeFile(sitesTxtPath, data.slice(4) + '\n', 'utf8', function(err, data) {
+        fs.writeFile(sitesTxtPath, data.slice(4) + '\n', 'utf8', function(err) {
         // if there is an error, log it
           if (err) {
             console.log(err);
           } else {
-            console.log('here');
             statusCode = 302;
             // if there is no error, write the head for 302
             res.writeHead(statusCode, httphelpers.headers);
             res.end();
           }
         });
-            
       }
     });
-    console.log('data outside', data);
-    // should append submitted sites to SITES.TXT
-    
-
-    // gain access to the sites.txt file
-    // console.log(sitesTxtPath);
-    
-
-    // add the url to the sites.txt file
-    // fs.writeFile(sitesTxtPath, 'something', 'utf8', function(err, data) {
-    //   // if there is an error, log it
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log('here');
-    //     statusCode = 302;
-    //     // if there is no error, write the head for 302
-    //     res.writeHead(statusCode, httphelpers.headers);
-    //     res.end();
-    //   }
-    // });
   }
-
-
-  
-    //res should include headers, properly formatted res body 
-    // fs.readFile()
-      //we should get the res body by reading the index.html file and getting the contents of it. Make sure we have access to index.html, and other modules   
-
-  //end res
-  // res.end(put the response data in here)
 
   // res.end(archive.paths.list);
 };

@@ -15,6 +15,16 @@ exports.serveAssets = function(res, asset, callback) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
   
+  // specifications
+
+    // inputs: path
+    // outputs: html file
+    //side effect: none 
+
+  // justifications:
+    
+    // I want to be able to get the output in a html file 
+
 
 };
 

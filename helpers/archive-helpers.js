@@ -36,11 +36,15 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
-
+  exports.readListOfUrls(function(callback) {
+    var found = _.any(sites, function(site, i) {
+      return site.match(url);
+    });
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
-
+  
 };
 
 exports.isUrlArchived = function(url, callback) {

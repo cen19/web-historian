@@ -2,16 +2,60 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
 var httphelpers = require('./http-helpers.js');
-var fs = require('fs');
+// var fs = require('fs');
+var url = require('url');
 
 
+var actions = {
+  'GET': function (req, res) {
+    var urlPath = url.parse(request.url).pathname;
 
 
-// Specifications for test#1
-// Input: GET request from client at the path, "/"
-// Output: Response body which includes the data from index.html
-// Side effect: none  
+    // if '/', it means that it is the index.html
+    if (urlPath === '/') {
+      urlPath = '/index.html';
+    }
+    httphelpers.serveAssets(res, urlPath, function() {
 
+      if (urlPath[0] === '/') {
+        urlPath = urlPath.slice(1);
+      }
+
+      archive.isUrlInList(urlPath, function(found) {
+        if (found) {
+          httphelpers.sendRedirect(res, '/loading.html');
+        } else {
+          httphelpers.send404(res);
+        }
+      });
+    });
+  },
+  'POST': function(req, res) {
+    httphelpers.collectData(req, function(data) {
+      var url = data.split('=')[1].replace('http://', '');
+      // check inside the sites.txt foe the website string
+
+      archive.isUrlInList(url, function(found) {
+        if (found) {
+          // check if site is on the disk
+          archive.isUrlArchived(url, function(exists) {
+            if (exists) {
+              httphelpers.sendRedirect(res, '/' + url);
+            } else {
+              // if it doesn't exist in the archive, send them to the loading html page
+              httphelpers.sendRedirect(res, '/loading.html');
+            }
+          });
+        } else {
+          // not found in this case, need to add it to the list
+          archive.addUrlToList(url, function() {
+            httphelpers.sendRedirect(res, '/loading.html');
+          });
+        }
+      });
+    });
+  }
+};
 
 
 exports.handleRequest = function (req, res) {

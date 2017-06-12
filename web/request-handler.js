@@ -8,7 +8,7 @@ var url = require('url');
 
 var actions = {
   'GET': function (req, res) {
-    var urlPath = url.parse(request.url).pathname;
+    var urlPath = url.parse(req.url).pathname;
 
 
     // if '/', it means that it is the index.html

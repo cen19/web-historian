@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var request = require('request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,31 +27,26 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  // fs.read through a file 
-  // possibly for the worker to determine what needs to be done
+  fs.readFile(exports.paths.list, function (err, sites) {
+    sites = sites.toString().split('\n');
+    if (callback) {
+      callback(sites);
+    }
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
-  // should return a boolean confirming whether or not the string is within the file
+
 };
 
 exports.addUrlToList = function(url, callback) {
-  // should only add to the list if it isn't in the list currently
-  // return a confirmation to let it be known it was successfully added
+
 };
 
 exports.isUrlArchived = function(url, callback) {
-  // should check a list to see if it was ever fully archived
-
-  // store in a javascript object to have a better time complexity
 
 };
 
 exports.downloadUrls = function(urls) {
-  // worker wakes up
-  // worker goes into a list
-  // worker iterates through the list to store the information of each website 
-
-  // after worker is finished, it will add the url to a list of archived URLs
 
 };

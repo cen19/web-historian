@@ -15,19 +15,50 @@ exports.serveAssets = function(res, asset, callback) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
   
-  // specifications
+  var encoding = {
+    encoding: 'utf8'
+  };
 
-    // inputs: path
-    // outputs: html file
-    //side effect: none 
-
-  // justifications:
-    
-    // I want to be able to get the output in a html file 
-
-
+  fs.readFile(archive.paths.archivedSites + asset, encoding, function(err, data) {
+    if (err) {
+      // err will come out when the file doesn't exist in the public folder
+      fs.readFile(archive.paths.archivedSites + asset, encoding, function(err, data) {
+        if (err) {
+          // checking here now to see if the file exists in the archive
+          callback ? callback() : exports.send404(res);
+        }
+      });
+    } else {
+      exports.sendResponse(res, data);
+    }
+  });
 };
 
 
 
 // As you progress, keep thinking about what helper functions you can put here!
+exports.sendRedirect = function(response, location, status) {
+  status = status || 302;
+  response.writeHead(status, {Location: location});
+  response.end();
+};
+
+exports.sendResponse = function(response, obj, status) {
+  status = status || 200;
+  response.writeHead(status, exports.headers);
+  response.end(obj);
+};
+
+exports.collectData = function(request, callback) {
+  var data = '';
+  request.on('data', function(chunk) {
+    data += chunk;
+  });
+  request.on('end', function() {
+    callback(data);
+  });
+};
+
+exports.send404 = function(response) {
+  exports.sendResponse(response, '404: Page not found', 404);
+};

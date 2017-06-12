@@ -44,13 +44,24 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  
+  fs.appendFile(exports.paths.list, url + '\n', function(err, file) {
+    callback();
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
+  var sitePath = path.join(exports.pats.archivedSites, url);
 
+  fs.exists(sitePath, function(exists) {
+    callback(exists);
+  });
 };
 
 exports.downloadUrls = function(urls) {
-
+  _.each(urls, function(url) {
+    if (!url) {
+      return;
+    }
+    request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
+  });
 };
